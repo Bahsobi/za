@@ -4,7 +4,6 @@ import numpy as np
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.linear_model import LinearRegression
-import seaborn as sns
 import matplotlib.pyplot as plt
 
 # App title and description
@@ -48,13 +47,9 @@ with st.sidebar:
 prediction = regressor.predict(input_encoded)
 
 # Display result
-st.subheader('📈 Predicted ProfitZZ')
+st.subheader('📈 Predicted Profit')
 st.success(f"💰 ${prediction[0]:,.2f}")
 
-# Correlation heatmap
-with st.expander("📊 Feature Correlation Heatmap"):
-    st.write("Correlations between numerical features:")
-    corr = df.corr(numeric_only=True)
-    fig, ax = plt.subplots()
-    sns.heatmap(corr, annot=True, cmap="coolwarm", ax=ax)
-    st.pyplot(fig)
+# Show summary stats of numerical columns
+with st.expander("📊 Numeric Data Summary"):
+    st.write(df.describe(numeric_only=True))
