@@ -6,6 +6,19 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 
+
+# Show University of Tehran logo and app title aligned horizontally
+st.markdown(
+    """
+    <div style='display: flex; align-items: center;'>
+        <img src='https://upload.wikimedia.org/wikipedia/commons/8/83/TUMS_Signature_Variation_1_BLUE.png' width='80' style='margin-right: 10px;'/>
+        <h1 style='margin: 0;'>💼 Startup Profit Predictor</h1>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+
 # App title and description
 st.title('💼 Startup Profit Predictor')
 st.info('Predict the **Profit** based on startup data using Multiple Linear Regression.')
