@@ -28,7 +28,7 @@ st.markdown(
 
 
 # App title and description
-st.title('💼 Startup Profit Predictor')
+st.title('🤖 Machine Learning Models APP for Advance Predicting Infertility Risk in Women Based on Metabolic and Immune Factors')
 st.info('Predict the **Profit** based on startup data using Multiple Linear Regression.')
 
 # Load dataset
@@ -75,7 +75,7 @@ with st.sidebar:
     
 
 
-    st.header('🚀 Enter Startup Details')
+    st.header('🚀 Enter Metabolic and Immune Factors Details')
 
     state = st.selectbox('State', df['State'].unique(),
     help='Enter the amount spent on Research and Development.')
