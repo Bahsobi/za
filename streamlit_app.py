@@ -7,11 +7,11 @@ from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 
 
-# Show University of Tehran logo and app title aligned horizontally
+# Show University of Tehran logo and app title centered at the top
 st.markdown(
     """
-    <div style='display: flex; align-items: center;'>
-        <img src='https://upload.wikimedia.org/wikipedia/commons/8/83/TUMS_Signature_Variation_1_BLUE.png' width='80' style='margin-right: 10px;'/>
+    <div style='display: flex; justify-content: center; align-items: center; flex-direction: column;'>
+        <img src='https://upload.wikimedia.org/wikipedia/commons/8/83/TUMS_Signature_Variation_1_BLUE.png' width='200' style='margin-bottom: 10px;'/>
         <h1 style='margin: 0;'>💼 Startup Profit Predictor</h1>
     </div>
     """,
