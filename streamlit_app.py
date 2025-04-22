@@ -29,6 +29,10 @@ X_encoded = ct.fit_transform(X_raw)
 regressor = LinearRegression()
 regressor.fit(X_encoded, y)
 
+# Initialize an empty list for storing predictions
+if 'predictions_list' not in st.session_state:
+    st.session_state.predictions_list = []
+
 # Sidebar input
 with st.sidebar:
     st.header('🚀 Enter Startup Details')
@@ -46,21 +50,17 @@ with st.sidebar:
 # Prediction
 prediction = regressor.predict(input_encoded)
 
+# Append the new prediction to the session state list
+st.session_state.predictions_list.append(prediction[0])
+
 # Display result
 st.subheader('📈 Predicted Profit')
 st.success(f"💰 ${prediction[0]:,.2f}")
 
-
-
-
-
-
-
-
 # Show summary stats of predicted profits
 with st.expander("📊 Predicted Profit Summary"):
     # Show summary statistics (mean, min, max, etc.) for the predictions
-    prediction_df = pd.DataFrame(predictions_list, columns=["Predicted Profit"])
+    prediction_df = pd.DataFrame(st.session_state.predictions_list, columns=["Predicted Profit"])
     st.write(prediction_df.describe())
 
 # Show summary stats of numerical columns
