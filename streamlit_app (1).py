@@ -47,7 +47,7 @@ with st.sidebar:
 prediction = regressor.predict(input_encoded)
 
 # Display result
-st.subheader('📈 Predicted Profit')
+st.subheader('📈 Predicted ProfitSSSSSS')
 st.success(f"${prediction[0]:,.2f}")
 
 
