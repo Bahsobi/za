@@ -62,4 +62,3 @@ with st.expander("📊 Correlation Heatmap"):
     fig, ax = plt.subplots()
     sns.heatmap(corr, annot=True, cmap="coolwarm", ax=ax)
     st.pyplot(fig)
-
