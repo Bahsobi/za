@@ -39,7 +39,11 @@ with st.sidebar:
 
     state = st.selectbox('State', df['State'].unique())
     rnd_spend = st.number_input('R&D Spend', min_value=0.0, format="%.2f")
-    admin = st.number_input('Administration', min_value=0.0, format="%.2f")
+    
+    
+admin = st.number_input('Administration', min_value=0.0, max_value=300000.0, value=0.0, step=1000.0)
+    
+    
     marketing = st.number_input('Marketing Spend', min_value=0.0, format="%.2f")
 
     input_data = pd.DataFrame([[state, rnd_spend, admin, marketing]],
