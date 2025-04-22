@@ -52,4 +52,4 @@ st.success(f"💰 ${prediction[0]:,.2f}")
 
 # Show summary stats of numerical columns
 with st.expander("📊 Numeric Data Summary"):
-st.write(df.select_dtypes(include='number').describe())
+st.write(df.describe())
