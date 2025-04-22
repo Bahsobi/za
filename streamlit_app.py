@@ -53,8 +53,10 @@ with st.sidebar:
     step=1000.0,
     help='Enter the amount spent on Research and Development.'
 )
-    admin = st.slider('Administration', min_value=51283.14, max_value=182645.56, value=51283.14, step=1000.0)
-    marketing = st.slider('Marketing Spend', min_value=0.0, max_value=471784.1, value=0.0, step=1000.0)
+    admin = st.slider('Administration', min_value=51283.14, max_value=182645.56, value=51283.14, step=1000.0,
+    help='Enter the amount spent on Research and Development.')
+    marketing = st.slider('Marketing Spend', min_value=0.0, max_value=471784.1, value=0.0, step=1000.0,
+    help='Enter the amount spent on Research and Development.')
 
 
     input_data = pd.DataFrame([[state, rnd_spend, admin, marketing]],
