@@ -50,6 +50,19 @@ prediction = regressor.predict(input_encoded)
 st.subheader('📈 Predicted Profit')
 st.success(f"💰 ${prediction[0]:,.2f}")
 
+
+
+
+
+
+
+
+# Show summary stats of predicted profits
+with st.expander("📊 Predicted Profit Summary"):
+    # Show summary statistics (mean, min, max, etc.) for the predictions
+    prediction_df = pd.DataFrame(predictions_list, columns=["Predicted Profit"])
+    st.write(prediction_df.describe())
+
 # Show summary stats of numerical columns
 with st.expander("📊 Numeric Data Summary"):
-    st.write(df.describe()) 
+    st.write(df.describe())
