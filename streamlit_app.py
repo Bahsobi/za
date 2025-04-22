@@ -9,38 +9,29 @@ import matplotlib.pyplot as plt
 
 
 
-
-
-# عنوان با استایل نئونی و جذاب
 st.markdown(
     """
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
-
     <style>
-    .neon-title {
-        font-family: 'Orbitron', sans-serif;
-        font-size: 22px;
-        font-weight: 600;
-        text-align: center;
-        color: #00ffe0;
-        text-shadow:
-            0 0 5px #00ffe0,
-            0 0 10px #00ffe0,
-            0 0 20px #00ffe0,
-            0 0 40px #0ff,
-            0 0 80px #0ff;
-        margin-top: 10px;
-        margin-bottom: 15px;
-    }
+        body {
+            background-color: #1e1e1e;
+            color: #f0f0f0;
+        }
+        .stApp {
+            background-color: #1e1e1e;
+        }
+        .css-18e3th9 {
+            background-color: #2e2e2e !important;
+        }
+        .css-1d391kg {
+            background-color: #2e2e2e !important;
+        }
+        .stSidebar {
+            background-color: #2e2e2e;
+        }
     </style>
-
-    <div class="neon-title">
-        🤖 Machine Learning Models APP for Advanced Predicting Infertility Risk in Women
-    </div>
     """,
     unsafe_allow_html=True
 )
-
 
 
 
