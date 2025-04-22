@@ -9,29 +9,32 @@ import matplotlib.pyplot as plt
 
 
 
+
+
+
 st.markdown(
     """
     <style>
         body {
-            background-color: #1e1e1e;
-            color: #f0f0f0;
+            background-color: #e6f4ea;
+            color: #1e1e1e;
         }
         .stApp {
-            background-color: #1e1e1e;
+            background-color: #e6f4ea;
         }
-        .css-18e3th9 {
-            background-color: #2e2e2e !important;
-        }
-        .css-1d391kg {
-            background-color: #2e2e2e !important;
+        .css-18e3th9, .css-1d391kg {
+            background-color: #d8efe0 !important;
         }
         .stSidebar {
-            background-color: #2e2e2e;
+            background-color: #c8e6c9;
         }
     </style>
     """,
     unsafe_allow_html=True
 )
+
+
+
 
 
 
