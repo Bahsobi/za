@@ -38,7 +38,7 @@ with st.sidebar:
     st.header('🚀 Enter Startup Details')
 
     state = st.selectbox('State', df['State'].unique())
-    rnd_spend = st.slider('R&D Spend', min_value=0.0, max_value=165349.2, value=0.0, step=1000.0)
+    rnd_spend = st.number_input('R&D Spend', min_value=0.0, max_value=165349.2, value=0.0, step=1000.0)
     
     
     admin = st.slider('Administration', min_value=0.0, max_value=300000.0, value=0.0, step=1000.0)
