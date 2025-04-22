@@ -49,3 +49,17 @@ prediction = regressor.predict(input_encoded)
 # Display result
 st.subheader('📈 Predicted Profit')
 st.success(f"${prediction[0]:,.2f}")
+
+
+# Display result#2
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+with st.expander("📊 Correlation Heatmap"):
+    st.write("**Feature Correlations**")
+    corr = df.corr(numeric_only=True)
+    fig, ax = plt.subplots()
+    sns.heatmap(corr, annot=True, cmap="coolwarm", ax=ax)
+    st.pyplot(fig)
+
