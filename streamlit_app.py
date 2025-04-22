@@ -42,9 +42,7 @@ with st.sidebar:
     
     
     admin = st.slider('Administration', min_value=0.0, max_value=300000.0, value=0.0, step=1000.0)
-    
-    
-    marketing = st.number_input('Marketing Spend', min_value=0.0, format="%.2f")
+    marketing = st.slider('Marketing Spend', min_value=0.0, max_value=300000.0, value=0.0, step=1000.0)
 
     input_data = pd.DataFrame([[state, rnd_spend, admin, marketing]],
                               columns=['State', 'R&D Spend', 'Administration', 'Marketing Spend'])
