@@ -28,7 +28,7 @@ st.markdown(
 
 
 # App title and description
-st.title('🤖 Machine Learning Models APP for Advance Predicting Infertility Risk in Women Based on Metabolic and Immune Factors')
+st.title('🤖 Machine Learning Models APP for Advance Predicting Infertility Risk in Women')
 st.info('Predict the **Profit** based on startup data using Multiple Linear Regression.')
 
 # Load dataset
