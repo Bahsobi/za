@@ -50,6 +50,7 @@ prediction = regressor.predict(input_encoded)
 st.subheader('📈 Predicted ProfitSSSSSS')
 st.success(f"${prediction[0]:,.2f}")
 
+-----------------
 
 # Display result#2
 
