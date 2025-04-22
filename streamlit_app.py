@@ -50,10 +50,22 @@ if 'predictions_list' not in st.session_state:
 
 
 
-
-
-# Sidebar input
+# Sidebar input with logo above
 with st.sidebar:
+    # Add logo at the top of the sidebar
+    st.markdown(
+        """
+        <div style='display: flex; justify-content: center; align-items: center;'>
+            <img src='https://upload.wikimedia.org/wikipedia/commons/8/83/TUMS_Signature_Variation_1_BLUE.png' width='150' style='margin-bottom: 20px;'/>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+    
+
+
     st.header('🚀 Enter Startup Details')
 
     state = st.selectbox('State', df['State'].unique(),
