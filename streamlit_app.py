@@ -7,6 +7,57 @@ from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 
 
+
+# تنظیمات استایل
+st.markdown(
+    """
+    <style>
+    .main-header {
+        text-align: center;
+        color: #1E3A8A;  /* رنگ آبی تیره */
+        font-family: 'Arial', sans-serif;
+    }
+    .sidebar-header {
+        text-align: center;
+        color: #2563EB;  /* رنگ آبی روشن */
+        font-size: 20px;
+        font-weight: bold;
+    }
+    .logo {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 20px;
+    }
+    .stButton>button {
+        background-color: #2563EB;  /* رنگ دکمه آبی روشن */
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 5px;
+        padding: 10px;
+    }
+    .stButton>button:hover {
+        background-color: #1D4ED8;  /* تغییر رنگ هنگام هاور */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Show University of Tehran logo and app title centered at the top
 st.markdown(
     """
