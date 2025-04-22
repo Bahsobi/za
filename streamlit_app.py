@@ -12,7 +12,6 @@ st.markdown(
     """
     <div style='display: flex; justify-content: center; align-items: center; flex-direction: column;'>
         <img src='https://upload.wikimedia.org/wikipedia/commons/8/83/TUMS_Signature_Variation_1_BLUE.png' width='200' style='margin-bottom: 10px;'/>
-        <h1 style='margin: 0;'>💼 Startup Profit Predictor</h1>
     </div>
     """,
     unsafe_allow_html=True
