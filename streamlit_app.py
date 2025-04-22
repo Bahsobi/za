@@ -33,12 +33,26 @@ regressor.fit(X_encoded, y)
 if 'predictions_list' not in st.session_state:
     st.session_state.predictions_list = []
 
+
+
+
+
+
+
+
 # Sidebar input
 with st.sidebar:
     st.header('🚀 Enter Startup Details')
 
     state = st.selectbox('State', df['State'].unique())
-    rnd_spend(0-165349.2) = st.number_input('R&D Spend', min_value=0.0, max_value=165349.2, value=0.0, step=1000.0)
+    rnd_spend = st.number_input(
+    'R&D Spend',
+    min_value=0.0,
+    max_value=165349.2,
+    value=0.0,
+    step=1000.0,
+    help='Enter the amount spent on Research and Development.'
+)
     admin = st.slider('Administration', min_value=51283.14, max_value=182645.56, value=51283.14, step=1000.0)
     marketing = st.slider('Marketing Spend', min_value=0.0, max_value=471784.1, value=0.0, step=1000.0)
 
