@@ -10,6 +10,25 @@ import matplotlib.pyplot as plt
 
 
 
+st.markdown(
+    """
+    <style>
+    body {
+        background-image: url('https://en.tums.ac.ir/images/www/en/page/editor/2019/1564562547-final.jpg');
+        background-size: cover;
+        background-position: center;
+        filter: blur(8px); /* محو کردن تصویر */
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1; /* جلوگیری از تداخل با محتوای صفحه */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 
 
