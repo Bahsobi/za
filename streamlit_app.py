@@ -9,26 +9,68 @@ import matplotlib.pyplot as plt
 
 
 
-
 st.markdown(
     """
     <style>
-    body {
+    /* پس‌زمینه محو */
+    .background {
         background-image: url('https://en.tums.ac.ir/images/www/en/page/editor/2019/1564562547-final.jpg');
         background-size: cover;
         background-position: center;
-        filter: blur(8px); /* محو کردن تصویر */
-        height: 100%;
-        width: 100%;
-        position: absolute;
+        filter: blur(8px);  /* محو کردن تصویر */
+        position: fixed;
         top: 0;
         left: 0;
+        height: 100%;
+        width: 100%;
         z-index: -1; /* جلوگیری از تداخل با محتوای صفحه */
+    }
+
+    /* طراحی بدنه صفحه */
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Arial', sans-serif;
+    }
+
+    /* عنوان و محتوای اصلی */
+    .main-header {
+        text-align: center;
+        color: #2563EB;
+        font-size: 36px;
+        margin-top: 30px;
+    }
+
+    /* دکمه‌ها و ابزارهای جانبی */
+    .stButton>button {
+        background-color: #2563EB;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 5px;
+        padding: 10px;
+        position: relative;
+        z-index: 10;
+    }
+
+    .stButton>button:hover {
+        background-color: #1D4ED8;
+    }
+
+    /* شفافیت برای محتوای صفحه */
+    .content {
+        background-color: rgba(255, 255, 255, 0.8);  /* پس‌زمینه شفاف */
+        padding: 20px;
+        border-radius: 10px;
     }
     </style>
     """,
     unsafe_allow_html=True
 )
+
+# اضافه کردن پس‌زمینه به صفحه
+st.markdown('<div class="background"></div>', unsafe_allow_html=True)
+
 
 
 
