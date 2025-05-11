@@ -1,29 +1,22 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from xgboost import XGBClassifier
+from sklearn.linear_model import LogisticRegression
+import seaborn as sns
+import statsmodels.api as sm
 
-
-
-
-
-
-
+# ---------- Custom Styling ----------
 st.markdown(
     """
     <style>
-        body {
-            background-color: #e6f4ea;
-            color: #1e1e1e;
-        }
         .stApp {
             background-color: #e6f4ea;
-        }
-        .css-18e3th9, .css-1d391kg {
-            background-color: #d8efe0 !important;
         }
         .stSidebar {
             background-color: #c8e6c9;
@@ -33,15 +26,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
-
-
-
-
-
-
-
-# Show University of Tehran logo and app title centered at the top
+# ---------- Header ----------
 st.markdown(
     """
     <div style='display: flex; justify-content: center; align-items: center; flex-direction: column;'>
@@ -51,97 +36,183 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+st.title('🤖🤰 Machine Learning Models APP for Advance Predicting Infertility Risk in Women')
+st.info('Predict **Infertility** based on health data using XGBoost and Logistic Regression.')
 
-# App title and description
-st.title('🤖 Machine Learning Models APP for Advance Predicting Infertility Risk in Women')
-st.info('Predict the **Profit** based on startup data using Multiple Linear Regression.')
+# ---------- Load Data ----------
+@st.cache_data
+def load_data():
+    url = "https://github.com/Bahsobi/sii_project/raw/main/cleaned_data%20(3)%20(1).xlsx"
+    return pd.read_excel(url)
 
-# Load dataset
-df = pd.read_csv('https://raw.githubusercontent.com/Bahsobi/sii_project/main/50_Startups%20(1).csv')
+df = load_data()
 
-# Show data
-with st.expander('📄 Data Overview'):
-    st.write(df)
+# ---------- Rename Columns ----------
+df.rename(columns={
+    'AGE': 'age',
+    'Race': 'race',
+    'BMI': 'BMI',
+    'Waist Circumference': 'waist_circumference',
+    'Hyperlipidemia': 'hyperlipidemia',
+    'diabetes': 'diabetes',
+    'SII': 'SII',
+    'Female infertility': 'infertility'
+}, inplace=True)
 
-# Prepare features and target
-X_raw = df.drop('Profit', axis=1)
-y = df['Profit']
+# ---------- Features & Target ----------
+features = ['SII', 'age', 'BMI', 'waist_circumference', 'race', 'hyperlipidemia', 'diabetes']
+target = 'infertility'
+df = df[features + [target]].dropna()
 
-# Encode categorical variable
-ct = ColumnTransformer(transformers=[('encoder', OneHotEncoder(), ['State'])], remainder='passthrough')
-X_encoded = ct.fit_transform(X_raw)
+X = df[features]
+y = df[target]
 
-# Train model
-regressor = LinearRegression()
-regressor.fit(X_encoded, y)
+# ---------- Preprocessing ----------
+categorical_features = ['race', 'hyperlipidemia', 'diabetes']
+numerical_features = ['SII', 'age', 'BMI', 'waist_circumference']
 
-# Initialize an empty list for storing predictions
-if 'predictions_list' not in st.session_state:
-    st.session_state.predictions_list = []
+preprocessor = ColumnTransformer([
+    ('cat', OneHotEncoder(handle_unknown='ignore'), categorical_features),
+    ('num', StandardScaler(), numerical_features)
+])
 
+# ---------- XGBoost Pipeline ----------
+model = Pipeline([
+    ('prep', preprocessor),
+    ('xgb', XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42))
+])
 
+X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, random_state=42)
+model.fit(X_train, y_train)
 
+# ---------- Feature Importance from XGBoost ----------
+xgb_model = model.named_steps['xgb']
+encoder = model.named_steps['prep'].named_transformers_['cat']
+feature_names = encoder.get_feature_names_out(categorical_features).tolist() + numerical_features
+importances = xgb_model.feature_importances_
+importance_df = pd.DataFrame({
+    'Feature': feature_names,
+    'Importance': importances
+}).sort_values(by='Importance', ascending=False)
 
+# ---------- Logistic Regression for Odds Ratio ----------
+odds_pipeline = Pipeline([
+    ('prep', preprocessor),
+    ('logreg', LogisticRegression(max_iter=1000))
+])
+odds_pipeline.fit(X_train, y_train)
+log_model = odds_pipeline.named_steps['logreg']
+odds_ratios = np.exp(log_model.coef_[0])
 
+odds_df = pd.DataFrame({
+    'Feature': feature_names,
+    'Odds Ratio': odds_ratios
+}).sort_values(by='Odds Ratio', ascending=False)
 
-# Sidebar input with logo above
-with st.sidebar:
-    # Add logo at the top of the sidebar
-    st.markdown(
-        """
-        <div style='display: flex; justify-content: center; align-items: center;'>
-            <img src='https://upload.wikimedia.org/wikipedia/commons/8/83/TUMS_Signature_Variation_1_BLUE.png' width='150' style='margin-bottom: 20px;'/>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+filtered_odds_df = odds_df[~odds_df['Feature'].str.contains("race")]
 
+# ---------- Sidebar User Input ----------
+st.sidebar.header("📝 Input Individual Data")
+race_options = [
+    "Mexican American", "Other Hispanic", "Non-Hispanic White",
+    "Non-Hispanic Black", "Non-Hispanic Asian", "Other Race - Including Multi-Racial"
+]
 
-    
+SII = st.sidebar.number_input("SII", min_value=0.0, value=10.0)
+age = st.sidebar.number_input("Age", min_value=15, max_value=60, value=30)
+bmi = st.sidebar.number_input("BMI", min_value=10.0, max_value=50.0, value=25.0)
+waist = st.sidebar.number_input("Waist Circumference", min_value=40.0, max_value=150.0, value=80.0)
+race = st.sidebar.selectbox("Race", race_options)
+hyperlipidemia = st.sidebar.selectbox("Hyperlipidemia", ['Yes', 'No'])
+diabetes = st.sidebar.selectbox("Diabetes", ['Yes', 'No'])
 
+# ---------- Prediction ----------
+user_input = pd.DataFrame([{
+    'SII': SII,
+    'age': age,
+    'BMI': bmi,
+    'waist_circumference': waist,
+    'race': race,
+    'hyperlipidemia': hyperlipidemia,
+    'diabetes': diabetes
+}])
 
-    st.header('🚀 Enter Metabolic and Immune Factors Details')
+prediction = model.predict(user_input)[0]
+probability = model.predict_proba(user_input)[0][1]
+odds_value = probability / (1 - probability)
 
-    state = st.selectbox('State', df['State'].unique(),
-    help='Enter the amount spent on Research and Development.')
+if prediction == 1:
+    st.error(f"""
+        ⚠️ **Prediction: Infertile**
 
-    
-    rnd_spend = st.number_input(
-    'R&D Spend',
-    min_value=0.0,
-    max_value=165349.2,
-    value=0.0,
-    step=1000.0,
-    help='Enter the amount spent on Research and Development.')
-    
-    admin = st.slider('Administration', min_value=51283.14, max_value=182645.56, value=51283.14, step=1000.0,
-    help='Enter the amount spent on Research and Development.')
-    
-    marketing = st.slider('Marketing Spend', min_value=0.0, max_value=471784.1, value=0.0, step=1000.0,
-    help='Enter the amount spent on Research and Development.')
+        🧮 **Probability of Infertility:** {probability:.2%}  
+        🎲 **Odds of Infertility:** {odds_value:.2f}
+    """)
+else:
+    st.success(f"""
+        ✅ **Prediction: Not Infertile**
 
+        🧮 **Probability of Infertility:** {probability:.2%}  
+        🎲 **Odds of Infertility:** {odds_value:.2f}
+    """)
 
-    input_data = pd.DataFrame([[state, rnd_spend, admin, marketing]],
-                              columns=['State', 'R&D Spend', 'Administration', 'Marketing Spend'])
+# ---------- Show Odds Ratios Table ----------
+st.subheader("📊 Odds Ratios for Infertility (Logistic Regression) (Excluding Race)")
+st.dataframe(filtered_odds_df)
 
-    input_encoded = ct.transform(input_data)
+# ---------- Show XGBoost Feature Importance Table ----------
+st.subheader("💡 Feature Importances (XGBoost)")
+st.dataframe(importance_df)
 
-# Prediction
-prediction = regressor.predict(input_encoded)
+# ---------- Plot XGBoost Feature Importances ----------
+st.subheader("📈 Bar Chart: Feature Importances")
+fig, ax = plt.subplots()
+sns.barplot(x='Importance', y='Feature', data=importance_df, ax=ax)
+st.pyplot(fig)
 
-# Append the new prediction to the session state list
-st.session_state.predictions_list.append(prediction[0])
+# ---------- Odds Ratio for SII Quartiles ----------
+st.subheader("📉 Odds Ratios for Infertility by SII Quartiles")
+df_sii = df[['SII', 'infertility']].copy()
+df_sii['SII_quartile'] = pd.qcut(df_sii['SII'], 4, labels=['Q1', 'Q2', 'Q3', 'Q4'])
 
-# Display result
-st.subheader('📈 Predicted Profit')
-st.success(f"💰 ${prediction[0]:,.2f}")
+X_q = pd.get_dummies(df_sii['SII_quartile'], drop_first=True)
+X_q = sm.add_constant(X_q).astype(float)
+y_q = df_sii['infertility'].astype(float)
 
-# Show summary stats of predicted profits
-with st.expander("📊 Predicted Profit Summary"):
-    # Show summary statistics (mean, min, max, etc.) for the predictions
-    prediction_df = pd.DataFrame(st.session_state.predictions_list, columns=["Predicted Profit"])
-    st.write(prediction_df.describe())
+model_q = sm.Logit(y_q, X_q).fit(disp=False)
+ors = np.exp(model_q.params)
+ci = model_q.conf_int()
+ci.columns = ['2.5%', '97.5%']
+ci = np.exp(ci)
 
-# Show summary stats of numerical columns
-with st.expander("📊 Numeric Data Summary"):
+or_df = pd.DataFrame({
+    'Quartile': ors.index,
+    'Odds Ratio': ors.values,
+    'CI Lower': ci['2.5%'],
+    'CI Upper': ci['97.5%'],
+    'p-value': model_q.pvalues
+}).query("Quartile != 'const'")
+
+st.dataframe(or_df.set_index('Quartile').style.format("{:.2f}"))
+
+fig3, ax3 = plt.subplots()
+sns.pointplot(data=or_df, x='Quartile', y='Odds Ratio', join=False, capsize=0.2, errwidth=1.5)
+ax3.axhline(1, linestyle='--', color='gray')
+ax3.set_title("Odds Ratios for Infertility by SII Quartiles")
+st.pyplot(fig3)
+
+# ---------- Data Summary ----------
+with st.expander("📋 Data Summary"):
     st.write(df.describe())
+
+# ---------- Pie Chart: Infertility Distribution ----------
+st.subheader("🎯 Infertility Distribution")
+fig2, ax2 = plt.subplots()
+df['infertility'].value_counts().plot.pie(
+    autopct='%1.1f%%', labels=['Not Infertile', 'Infertile'], ax=ax2, colors=["#81c784", "#e57373"])
+ax2.set_ylabel("")
+st.pyplot(fig2)
+
+# ---------- Sample Data ----------
+with st.expander("🔍 Sample Data (First 10 Rows)"):
+    st.dataframe(df.head(10))
